@@ -18,7 +18,11 @@ public class Runner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        //height Check
+        if (transform.position.y < -3)
+        {
+            DestroyRunner();
+        }
     }
     
 
