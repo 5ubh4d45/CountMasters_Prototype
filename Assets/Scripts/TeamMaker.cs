@@ -32,7 +32,7 @@ public class TeamMaker : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // ArrangeRunners();
+        ArrangeRunners();
 
         currentRunnerAmount = transform.childCount;
     }
