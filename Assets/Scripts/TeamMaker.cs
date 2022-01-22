@@ -26,7 +26,7 @@ public class TeamMaker : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // AddRunners(runnerAmount);
+        AddRunners(currentRunnerAmount);
     }
 
     // Update is called once per frame
@@ -66,7 +66,7 @@ public class TeamMaker : MonoBehaviour
 
             runnerSpawnInstance.name = "Runner_" + runnerSpawnInstance.transform.GetSiblingIndex();
 
-            StartCoroutine(ArrangeRunners(1f));
+            StartCoroutine(ArrangeRunners(1.5f));
         }
     }
 

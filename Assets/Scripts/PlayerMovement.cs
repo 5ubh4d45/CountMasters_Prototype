@@ -10,18 +10,24 @@ public class PlayerMovement : MonoBehaviour
     
     [SerializeField] private float zAxisSpeed = 3f;
     [SerializeField] private float xAxisSpeed = 0.1f;
-    
+
+    [SerializeField] private Vector2 xAxisMovementClamp;
 
     [SerializeField] private bool isTouchEnabled;
     private float _mouseX;
     private float _mouseY;
     
     private bool _gettingInputs;
+    private bool _canMove;
+
+    private Vector2 _actualClamping;
+
+    private Detection _detection;
     
     // Start is called before the first frame update
     void Start()
     {
-        
+        _detection = GetComponent<Detection>();
     }
 
     // Update is called once per frame
@@ -42,7 +48,12 @@ public class PlayerMovement : MonoBehaviour
         //checks for the touch if disabled then it uses keyboard
         if (!isTouchEnabled)
         {
-            _gettingInputs = true;
+            // _gettingInputs = true;
+            _gettingInputs = Input.GetKeyDown("space");
+            if (_gettingInputs)
+            {
+                _canMove = true;
+            }
             
             _mouseX = Input.GetAxis("Horizontal") * 15;
             _mouseY = Input.GetAxis("Vertical") * 15;
@@ -53,6 +64,7 @@ public class PlayerMovement : MonoBehaviour
         if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Moved)
         {
             _gettingInputs = true;
+            _canMove = _gettingInputs;
             
             _mouseX = Input.GetTouch(0).deltaPosition.x;
             _mouseY = Input.GetTouch(0).deltaPosition.y;
@@ -66,19 +78,29 @@ public class PlayerMovement : MonoBehaviour
         }
         
     }
+
+    private void CheckClampSize()
+    {
+        float radius = _detection.DetectionSpehereRadius;
+        _actualClamping = new Vector2(xAxisMovementClamp.x + radius, xAxisMovementClamp.y - radius);
+    }
         
     private void Movement()
     {   
         //moves the cube
         Vector3 oldPos = cube.position;
+
+        CheckClampSize();
         
         // waits for the first input
-        if (_gettingInputs)
+        if (_canMove)
         {
             Vector3 newPos = oldPos + new Vector3((xAxisSpeed * _mouseX) * Time.deltaTime, 0, zAxisSpeed * Time.deltaTime);
+
+            newPos.x = Mathf.Clamp(newPos.x, xAxisMovementClamp.x, xAxisMovementClamp.y);
+            
             cube.position = newPos;
         }
-        
     }
 
 }

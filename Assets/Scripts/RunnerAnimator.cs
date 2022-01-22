@@ -7,6 +7,7 @@ using Random = UnityEngine.Random;
 public class RunnerAnimator : MonoBehaviour
 {
     [SerializeField] private Animator anim;
+    [SerializeField] private Runner runner;
     [SerializeField] private String runCycleOffset;
     
     // Start is called before the first frame update
@@ -19,6 +20,11 @@ public class RunnerAnimator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        SetAnimations();
+    }
+
+    private void SetAnimations()
+    {
+        anim.SetBool("CanRun", runner.IsMoving);
     }
 }

@@ -10,10 +10,11 @@ public class Gates : MonoBehaviour
     [SerializeField] private Multiplier rightMultiplier;
 
     [Space][Header("Components")]
-    [SerializeField] private Collider[] gateCol;
     [SerializeField] private TextMeshPro leftGateText;
     [SerializeField] private TextMeshPro rightGateText;
-
+    
+    [Space][Tooltip("0 for Left; 1 for Right collider")]
+    [SerializeField] private Collider[] gateCol;
 
     private Multiplier _currentMultiplier;
     public enum MultiplierType { add, multiply }
@@ -45,11 +46,19 @@ public class Gates : MonoBehaviour
         {
             _currentMultiplier = rightMultiplier;
             
+            //disable the gate
+            Debug.Log("rightGate");
+            gateCol[1].gameObject.SetActive(false);
+            
             return CalculateMultiplier(currentRunnerAmount);
         }
 
         _currentMultiplier = leftMultiplier;
-            
+        
+        //disable the gate
+        Debug.Log("leftGate");
+        gateCol[0].gameObject.SetActive(false);
+        
         return CalculateMultiplier(currentRunnerAmount);
     }
 
