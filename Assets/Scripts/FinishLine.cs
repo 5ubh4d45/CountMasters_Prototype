@@ -4,15 +4,19 @@ using UnityEngine;
 
 public class FinishLine : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private bool _callNextLvl = true;
+    private void OnTriggerExit(Collider other)
     {
-        
+        StartCoroutine(CallNextLevel());
+        _callNextLvl = false;
     }
 
-    // Update is called once per frame
-    void Update()
+    private IEnumerator CallNextLevel()
     {
+        if (!_callNextLvl) yield return null;
         
+        yield return new WaitForSeconds(0.5f);
+        
+        UIManager.Instance.NextLevel();
     }
 }

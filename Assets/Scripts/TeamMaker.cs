@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
+
 public class TeamMaker : MonoBehaviour
 {
 
@@ -18,15 +19,20 @@ public class TeamMaker : MonoBehaviour
     [SerializeField] private bool checkFormationRealTime;
     
     [SerializeField] private GameObject runner;
-    [SerializeField] private int currentRunnerAmount;
+    [SerializeField] private int currentRunnerAmount = 1;
+    
+    private bool _isDead;
+
+    public bool IsDead => _isDead;
     public int CurrentRunnerAmount => currentRunnerAmount;
     
     private float _teamRadius;
     
+    
     // Start is called before the first frame update
     void Start()
     {
-        AddRunners(currentRunnerAmount);
+        AddRunners(currentRunnerAmount - 1);
     }
 
     // Update is called once per frame
@@ -38,6 +44,7 @@ public class TeamMaker : MonoBehaviour
         }
 
         currentRunnerAmount = transform.childCount;
+        CheckDeathSts();
     }
     
     private void RunnerArranger()
@@ -65,9 +72,10 @@ public class TeamMaker : MonoBehaviour
             GameObject runnerSpawnInstance = Instantiate(runner, transform);
 
             runnerSpawnInstance.name = "Runner_" + runnerSpawnInstance.transform.GetSiblingIndex();
-
+            
             StartCoroutine(ArrangeRunners(1.5f));
         }
+        
     }
 
     private IEnumerator ArrangeRunners(float timeToRun)
@@ -87,5 +95,13 @@ public class TeamMaker : MonoBehaviour
     {
         _teamRadius = radiusFactor * Mathf.Sqrt(transform.childCount);
         return _teamRadius;
+    }
+    
+    private void CheckDeathSts()
+    {
+        if (currentRunnerAmount <= 0)
+        {
+            _isDead = true;
+        }
     }
 }

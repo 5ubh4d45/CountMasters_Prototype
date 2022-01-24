@@ -5,12 +5,10 @@ using UnityEngine;
 
 public class Runner : MonoBehaviour
 {
-    // [SerializeField] private Collider collider;
-    // [SerializeField] private Renderer renderer;
-    // [SerializeField] private LayerMask obstacleLayer;
-
+    
     // [SerializeField] private PlayerMovement playerMovement;
     [SerializeField] private string obstacleTag;
+    [SerializeField] private GameObject deathParticle;
     
     private bool _isMoving;
     private float oldPositionZ;
@@ -39,25 +37,28 @@ public class Runner : MonoBehaviour
         //detection for collision
         if (other.CompareTag(obstacleTag))
         {
-            Debug.Log("Obstacle collided");
-            // Destroy(this.gameObject);
+            // Debug.Log("Obstacle collided");
+            
             DestroyRunner();
         }
     }
 
     private void DestroyRunner()
     {
-        this.GetComponent<Collider>().enabled = false;
-        this.GetComponent<Renderer>().enabled = false;
+        GetComponent<Collider>().enabled = false;
+        // GetComponentInChildren<Renderer>().enabled = false;
+
+        Instantiate(deathParticle, transform);
         
-        Destroy(gameObject);
+        Destroy(gameObject, 0.3f);
     }
 
     private void CheckMovement()
     {
         float posZ = transform.position.z;
 
-        _isMoving = posZ > oldPositionZ;
+        //checks for movement
+        _isMoving = (posZ > oldPositionZ || posZ < oldPositionZ);
 
         oldPositionZ = posZ;
 

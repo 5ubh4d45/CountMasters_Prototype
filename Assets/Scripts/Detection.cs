@@ -23,6 +23,7 @@ public class Detection : MonoBehaviour
     void Update()
     {
         DetectGates();
+        DeathCheck();
     }
 
     private void DetectGates()
@@ -42,11 +43,24 @@ public class Detection : MonoBehaviour
         
         teamMaker.AddRunners(runnersToAdd);
         
+        ScoreManager.Instance.AddScore(runnersToAdd * 100);
+        
         
         //temp gate check
         // detectedGate.gameObject.SetActive(false);
         Debug.Log("Gates detected spawning!!");
 
+    }
+
+    private void DeathCheck()
+    {
+        //temp checks for death and signals temp UI to pause
+        if (teamMaker.IsDead)
+        {
+            GetComponent<PlayerMovement>().speedFactor = 0f;
+            UIManager.Instance.PlayerDead();
+        }
+        
     }
 
     private void OnDrawGizmosSelected()

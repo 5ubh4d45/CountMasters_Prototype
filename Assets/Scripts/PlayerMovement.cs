@@ -17,8 +17,12 @@ public class PlayerMovement : MonoBehaviour
     private float _mouseX;
     private float _mouseY;
     
+    [HideInInspector]
+    public float speedFactor = 1f;
+    
     private bool _gettingInputs;
     private bool _canMove;
+    
 
     private Vector2 _actualClamping;
 
@@ -28,6 +32,7 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         _detection = GetComponent<Detection>();
+        _canMove = false;
     }
 
     // Update is called once per frame
@@ -55,8 +60,8 @@ public class PlayerMovement : MonoBehaviour
                 _canMove = true;
             }
             
-            _mouseX = Input.GetAxis("Horizontal") * 15;
-            _mouseY = Input.GetAxis("Vertical") * 15;
+            _mouseX = Input.GetAxis("Horizontal");
+            _mouseY = Input.GetAxis("Vertical");
             return;
         }
         
@@ -65,6 +70,9 @@ public class PlayerMovement : MonoBehaviour
         {
             _gettingInputs = true;
             _canMove = _gettingInputs;
+            
+            // _mouseX = Mathf.Clamp(Input.GetTouch(0).deltaPosition.x, -1f, 1f);
+            // _mouseY = Mathf.Clamp(Input.GetTouch(0).deltaPosition.y, -1f, 1f);
             
             _mouseX = Input.GetTouch(0).deltaPosition.x;
             _mouseY = Input.GetTouch(0).deltaPosition.y;
@@ -83,6 +91,7 @@ public class PlayerMovement : MonoBehaviour
     {
         float radius = _detection.DetectionSpehereRadius;
         _actualClamping = new Vector2(xAxisMovementClamp.x + radius, xAxisMovementClamp.y - radius);
+        
     }
         
     private void Movement()
@@ -92,15 +101,22 @@ public class PlayerMovement : MonoBehaviour
 
         CheckClampSize();
         
+        // temporary start text disabling
+        if (_canMove)
+        {
+            UIManager.Instance.DisableStartText();
+        }
+        
         // waits for the first input
         if (_canMove)
         {
-            Vector3 newPos = oldPos + new Vector3((xAxisSpeed * _mouseX) * Time.deltaTime, 0, zAxisSpeed * Time.deltaTime);
+            Vector3 newPos = oldPos + new Vector3((xAxisSpeed * _mouseX * speedFactor) * Time.deltaTime, 0, zAxisSpeed * speedFactor * Time.deltaTime);
 
             newPos.x = Mathf.Clamp(newPos.x, xAxisMovementClamp.x, xAxisMovementClamp.y);
             
             cube.position = newPos;
         }
     }
+    
 
 }
