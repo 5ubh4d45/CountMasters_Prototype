@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Runner : MonoBehaviour
+public class Runner : MonoBehaviour, IPooledObjects
 {
     
     // [SerializeField] private PlayerMovement playerMovement;
@@ -15,7 +15,12 @@ public class Runner : MonoBehaviour
     public bool IsMoving => _isMoving;
 
     // Start is called before the first frame update
-    void Start()
+    // void Start()
+    // {
+    //     oldPositionZ = transform.position.z;
+    // }
+    
+    public void OnObjectSpawn()
     {
         oldPositionZ = transform.position.z;
     }

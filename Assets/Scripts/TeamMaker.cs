@@ -19,6 +19,7 @@ public class TeamMaker : MonoBehaviour
     [SerializeField] private bool checkFormationRealTime;
     
     [SerializeField] private GameObject runner;
+    [SerializeField] private string objectToSpawn;
     [SerializeField] private int currentRunnerAmount = 1;
     
     private bool _isDead;
@@ -27,12 +28,13 @@ public class TeamMaker : MonoBehaviour
     public int CurrentRunnerAmount => currentRunnerAmount;
     
     private float _teamRadius;
-    
-    
+    private ObjectPooler _objectPooler;
+
     // Start is called before the first frame update
     void Start()
     {
         AddRunners(currentRunnerAmount - 1);
+        _objectPooler = ObjectPooler.Instance;
     }
 
     // Update is called once per frame
@@ -69,10 +71,12 @@ public class TeamMaker : MonoBehaviour
     {
         for (int i = 0; i < amountToSpawn; i++)
         {
-            GameObject runnerSpawnInstance = Instantiate(runner, transform);
-
-            runnerSpawnInstance.name = "Runner_" + runnerSpawnInstance.transform.GetSiblingIndex();
+            // GameObject runnerSpawnInstance = Instantiate(runner, transform);
+            //
+            // runnerSpawnInstance.name = "Runner_" + runnerSpawnInstance.transform.GetSiblingIndex();
             
+            _objectPooler.SpawnFromPool(objectToSpawn, transform.position, Quaternion.identity);
+
             StartCoroutine(ArrangeRunners(1.5f));
         }
         

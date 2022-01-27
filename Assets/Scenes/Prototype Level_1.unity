@@ -175,6 +175,7 @@ MonoBehaviour:
   baseAngle: 100
   checkFormationRealTime: 0
   runner: {fileID: 9024652917495620031, guid: 2f5815578d93d6a4fb5cf06267e87462, type: 3}
+  objectToSpawn: 
   currentRunnerAmount: 100
 --- !u!1001 &10710804
 PrefabInstance:
@@ -5650,6 +5651,21 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 1936762395}
+    - target: {fileID: 1559369236798042283, guid: 0b4ff17d64dec434680cb1f3d253e983,
+        type: 3}
+      propertyPath: m_SelectedEdges.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1559369236798042283, guid: 0b4ff17d64dec434680cb1f3d253e983,
+        type: 3}
+      propertyPath: m_SelectedFaces.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1559369236798042283, guid: 0b4ff17d64dec434680cb1f3d253e983,
+        type: 3}
+      propertyPath: m_SelectedVertices.Array.size
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 1559369236798042284, guid: 0b4ff17d64dec434680cb1f3d253e983,
         type: 3}
       propertyPath: m_Mesh
@@ -6288,6 +6304,56 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 653556895}
   m_CullTransparentMesh: 1
+--- !u!1 &666026554
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 666026556}
+  - component: {fileID: 666026555}
+  m_Layer: 0
+  m_Name: RunnerPooler
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &666026555
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 666026554}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd32dd1165359314894fdf8f7d50b9f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pools:
+  - tag: PlayerRunner
+    prefab: {fileID: 6177077189143742653}
+    size: 150
+  - tag: DeathEffect
+    prefab: {fileID: 215769475111351735, guid: 08321cd091a1e2646bda885ec7910eb4, type: 3}
+    size: 50
+--- !u!4 &666026556
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 666026554}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!43 &670292683
 Mesh:
   m_ObjectHideFlags: 0
@@ -6508,6 +6574,7 @@ MonoBehaviour:
   baseAngle: 100
   checkFormationRealTime: 0
   runner: {fileID: 9024652917495620031, guid: 2f5815578d93d6a4fb5cf06267e87462, type: 3}
+  objectToSpawn: 
   currentRunnerAmount: 50
 --- !u!1 &687409781
 GameObject:
@@ -6857,6 +6924,7 @@ MonoBehaviour:
   baseAngle: 100
   checkFormationRealTime: 0
   runner: {fileID: 9024652917495620031, guid: 2f5815578d93d6a4fb5cf06267e87462, type: 3}
+  objectToSpawn: 
   currentRunnerAmount: 20
 --- !u!43 &751977951
 Mesh:
@@ -16347,7 +16415,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-312162
+  m_Name: pb_Mesh-1612
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -19226,10 +19294,15 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 8175476553497526580, guid: 00ae72f2f05aa9344b8ef96dcc809d8a,
+        type: 3}
+      propertyPath: objectToSpawn
+      value: PlayerRunner
+      objectReference: {fileID: 0}
     - target: {fileID: 8175476553712408681, guid: 00ae72f2f05aa9344b8ef96dcc809d8a,
         type: 3}
       propertyPath: isTouchEnabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8175476553712408682, guid: 00ae72f2f05aa9344b8ef96dcc809d8a,
         type: 3}
@@ -19293,6 +19366,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 00ae72f2f05aa9344b8ef96dcc809d8a, type: 3}
+--- !u!1 &6177077189143742653 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1732605322164255010, guid: 00ae72f2f05aa9344b8ef96dcc809d8a,
+    type: 3}
+  m_PrefabInstance: {fileID: 6177077189143742652}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8645073606818061911
 PrefabInstance:
   m_ObjectHideFlags: 0
