@@ -9,20 +9,22 @@ public class Runner : MonoBehaviour, IPooledObjects
     // [SerializeField] private PlayerMovement playerMovement;
     [SerializeField] private string obstacleTag;
     [SerializeField] private GameObject deathParticle;
+    [SerializeField] private bool isEnemy;
     
     private bool _isMoving;
-    private float oldPositionZ;
+    private float _oldPositionZ;
     public bool IsMoving => _isMoving;
+    private ObjectPooler _objectPooler;
 
     // Start is called before the first frame update
-    // void Start()
-    // {
-    //     oldPositionZ = transform.position.z;
-    // }
+    void Start()
+    {
+        _objectPooler = ObjectPooler.Instance;
+    }
     
     public void OnObjectSpawn()
     {
-        oldPositionZ = transform.position.z;
+        _oldPositionZ = transform.position.z;
     }
 
     // Update is called once per frame
@@ -44,18 +46,29 @@ public class Runner : MonoBehaviour, IPooledObjects
         {
             // Debug.Log("Obstacle collided");
             
-            DestroyRunner();
+            StartCoroutine(DestroyRunner());
         }
     }
 
-    private void DestroyRunner()
+    private IEnumerator DestroyRunner()
     {
-        GetComponent<Collider>().enabled = false;
-        // GetComponentInChildren<Renderer>().enabled = false;
+        if (isEnemy)
+        {
+            GetComponent<Collider>().enabled = false;
+            // GetComponentInChildren<Renderer>().enabled = false;
+            
+            Instantiate(deathParticle, transform);
+            
+            Destroy(gameObject, 0.3f);
+            yield return null;
+        }
 
         Instantiate(deathParticle, transform);
-        
+            
         Destroy(gameObject, 0.3f);
+        yield return new WaitForSeconds(0.3f);
+        _objectPooler.DestroyRunner("PlayerRunner", gameObject);
+        
     }
 
     private void CheckMovement()
@@ -63,9 +76,9 @@ public class Runner : MonoBehaviour, IPooledObjects
         float posZ = transform.position.z;
 
         //checks for movement
-        _isMoving = (posZ > oldPositionZ || posZ < oldPositionZ);
+        _isMoving = (posZ > _oldPositionZ || posZ < _oldPositionZ);
 
-        oldPositionZ = posZ;
+        _oldPositionZ = posZ;
 
     }
     

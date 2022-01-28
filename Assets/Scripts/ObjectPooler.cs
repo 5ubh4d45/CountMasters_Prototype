@@ -5,12 +5,13 @@ using UnityEngine;
 
 public class ObjectPooler : MonoBehaviour
 {
-    [SerializeField] public List<Pool> pools;
-    
-    private Dictionary<string, Queue<GameObject>> _poolDictionary;
+    [SerializeField] private List<Pool> pools;
+    [SerializeField] private Transform runnerPoolParent;
+
+    private Dictionary<string, Queue<GameObject> > _poolDictionary;
 
     
-    [System.Serializable]
+    [Serializable]
     public class Pool
     {
         public string tag;
@@ -45,7 +46,7 @@ public class ObjectPooler : MonoBehaviour
 
             for (int i = 0; i < pool.size; i++)
             {
-                GameObject obj = Instantiate(pool.prefab);
+                GameObject obj = Instantiate(pool.prefab, runnerPoolParent);
                 obj.SetActive(false);
                 obj.name = pool.prefab.name + "_" + i;
                 
@@ -56,17 +57,18 @@ public class ObjectPooler : MonoBehaviour
         }
     }
 
-    public void SpawnFromPool(string tag, Vector3 position, Quaternion rotation)
+    public void SpawnFromPool(string objTag, Transform parent, Quaternion rotation)
     {
-        if (!_poolDictionary.ContainsKey(tag))
+        if (!_poolDictionary.ContainsKey(objTag))
         {
-            Debug.Log("Pool with tag " + tag + " Doesn't exists!");
+            Debug.Log("Pool with tag " + objTag + " Doesn't exists!");
             return;
         }
         
-        GameObject objToSpawn = _poolDictionary[tag].Dequeue();
+        GameObject objToSpawn = _poolDictionary[objTag].Dequeue();
 
-        objToSpawn.transform.position = position;
+        objToSpawn.transform.parent = parent;
+        objToSpawn.transform.position = parent.position;
         objToSpawn.transform.rotation = rotation;
 
         IPooledObjects pooledObj = objToSpawn.GetComponent<IPooledObjects>();
@@ -78,9 +80,25 @@ public class ObjectPooler : MonoBehaviour
         
         objToSpawn.SetActive(true);
         
-        _poolDictionary[tag].Enqueue(objToSpawn);
     }
-    
+
+    public void DestroyRunner(string objTag, GameObject objToDestroy)
+    {
+        if (!_poolDictionary.ContainsKey(objTag))
+        {
+            Debug.Log("Pool with tag " + objTag + " Doesn't exists!");
+            return;
+        }
+
+        objToDestroy.SetActive(false);
+        objToDestroy.transform.parent = runnerPoolParent;
+        _poolDictionary[objTag].Enqueue(objToDestroy);
+    }
+
+    // private void Update()
+    // {
+    //     Debug.Log("Current Queue Count: " + _poolDictionary[pools[0].tag].Count);
+    // }
 }
 
 public interface IPooledObjects

@@ -14,6 +14,7 @@ public class TeamMaker : MonoBehaviour
     [SerializeField] private float radiusFactor;
     [Range(0f, 1f)]
     [SerializeField] private float angleFactor;
+    [SerializeField] private bool isEnemy;
 
     [SerializeField] private float baseAngle = 90f;
     [SerializeField] private bool checkFormationRealTime;
@@ -69,13 +70,22 @@ public class TeamMaker : MonoBehaviour
 
     public void AddRunners(int amountToSpawn)
     {
+        if (isEnemy)
+        {
+            for (int i = 0; i < amountToSpawn; i++)
+            {
+                GameObject runnerSpawnInstance = Instantiate(runner, transform);
+                
+                runnerSpawnInstance.name = "EnemyRunner_" + runnerSpawnInstance.transform.GetSiblingIndex();
+                StartCoroutine(ArrangeRunners(1.5f));
+            }
+            
+            return;
+        }
+
         for (int i = 0; i < amountToSpawn; i++)
         {
-            // GameObject runnerSpawnInstance = Instantiate(runner, transform);
-            //
-            // runnerSpawnInstance.name = "Runner_" + runnerSpawnInstance.transform.GetSiblingIndex();
-            
-            _objectPooler.SpawnFromPool(objectToSpawn, transform.position, Quaternion.identity);
+            _objectPooler.SpawnFromPool(objectToSpawn, this.transform, Quaternion.identity);
 
             StartCoroutine(ArrangeRunners(1.5f));
         }

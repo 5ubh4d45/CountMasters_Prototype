@@ -78,6 +78,7 @@ MonoBehaviour:
   obstacleTag: Runner
   deathParticle: {fileID: 7588215801132310222, guid: c54ec4cfe757e354393fc6d260acf826,
     type: 3}
+  isEnemy: 1
 --- !u!54 &5522382692373378472
 Rigidbody:
   m_ObjectHideFlags: 0

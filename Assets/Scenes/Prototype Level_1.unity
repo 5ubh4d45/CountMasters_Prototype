@@ -172,6 +172,7 @@ MonoBehaviour:
   runnerCountText: {fileID: 0}
   radiusFactor: 0.403
   angleFactor: 0.382
+  isEnemy: 1
   baseAngle: 100
   checkFormationRealTime: 0
   runner: {fileID: 9024652917495620031, guid: 2f5815578d93d6a4fb5cf06267e87462, type: 3}
@@ -6315,7 +6316,7 @@ GameObject:
   - component: {fileID: 666026556}
   - component: {fileID: 666026555}
   m_Layer: 0
-  m_Name: RunnerPooler
+  m_Name: ObjectPooler
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6336,10 +6337,8 @@ MonoBehaviour:
   pools:
   - tag: PlayerRunner
     prefab: {fileID: 6177077189143742653}
-    size: 150
-  - tag: DeathEffect
-    prefab: {fileID: 215769475111351735, guid: 08321cd091a1e2646bda885ec7910eb4, type: 3}
-    size: 50
+    size: 200
+  runnerPoolParent: {fileID: 1988567193}
 --- !u!4 &666026556
 Transform:
   m_ObjectHideFlags: 0
@@ -6350,7 +6349,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 1988567193}
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -6571,6 +6571,7 @@ MonoBehaviour:
   runnerCountText: {fileID: 0}
   radiusFactor: 0.403
   angleFactor: 0.382
+  isEnemy: 1
   baseAngle: 100
   checkFormationRealTime: 0
   runner: {fileID: 9024652917495620031, guid: 2f5815578d93d6a4fb5cf06267e87462, type: 3}
@@ -6921,6 +6922,7 @@ MonoBehaviour:
   runnerCountText: {fileID: 0}
   radiusFactor: 0.403
   angleFactor: 0.382
+  isEnemy: 1
   baseAngle: 100
   checkFormationRealTime: 0
   runner: {fileID: 9024652917495620031, guid: 2f5815578d93d6a4fb5cf06267e87462, type: 3}
@@ -8497,6 +8499,7 @@ MonoBehaviour:
   obstacleTag: Runner
   deathParticle: {fileID: 7588215801132310222, guid: c54ec4cfe757e354393fc6d260acf826,
     type: 3}
+  isEnemy: 0
 --- !u!54 &939165010
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -14961,6 +14964,7 @@ MonoBehaviour:
   obstacleTag: Runner
   deathParticle: {fileID: 7588215801132310222, guid: c54ec4cfe757e354393fc6d260acf826,
     type: 3}
+  isEnemy: 0
 --- !u!54 &1741161498
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -16827,6 +16831,36 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1968432486}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1988567192
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1988567193}
+  m_Layer: 0
+  m_Name: RunnerPoolParent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1988567193
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1988567192}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 666026556}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2001986378
 GameObject:
   m_ObjectHideFlags: 0
@@ -19301,8 +19335,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8175476553712408681, guid: 00ae72f2f05aa9344b8ef96dcc809d8a,
         type: 3}
+      propertyPath: xAxisSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8175476553712408681, guid: 00ae72f2f05aa9344b8ef96dcc809d8a,
+        type: 3}
       propertyPath: isTouchEnabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8175476553712408682, guid: 00ae72f2f05aa9344b8ef96dcc809d8a,
         type: 3}
