@@ -14,15 +14,17 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Vector2 xAxisMovementClamp;
 
     [SerializeField] private bool isTouchEnabled;
-    private float _mouseX;
-    private float _mouseY;
+    private Vector2 _mouse;
     
     [HideInInspector]
     public float speedFactor = 1f;
     
     private bool _gettingInputs;
     private bool _canMove;
-    
+
+    private Camera _camera;
+    private Vector2 _screenSpacePosition;
+    private Vector2 _worldSpacePosition;
 
     private Vector2 _actualClamping;
 
@@ -33,6 +35,7 @@ public class PlayerMovement : MonoBehaviour
     {
         _detection = GetComponent<Detection>();
         _canMove = false;
+        _camera = Camera.main;
     }
 
     // Update is called once per frame
@@ -60,8 +63,8 @@ public class PlayerMovement : MonoBehaviour
                 _canMove = true;
             }
             
-            _mouseX = Input.GetAxis("Horizontal");
-            _mouseY = Input.GetAxis("Vertical");
+            _mouse.x = Input.GetAxis("Horizontal");
+            _mouse.y = Input.GetAxis("Vertical");
             return;
         }
         
@@ -74,13 +77,19 @@ public class PlayerMovement : MonoBehaviour
             // _mouseX = Mathf.Clamp(Input.GetTouch(0).deltaPosition.x, -1f, 1f);
             // _mouseY = Mathf.Clamp(Input.GetTouch(0).deltaPosition.y, -1f, 1f);
             
-            _mouseX = Input.GetTouch(0).deltaPosition.x;
-            _mouseY = Input.GetTouch(0).deltaPosition.y;
+            _screenSpacePosition.x = Input.GetTouch(0).position.x;
+            _screenSpacePosition.y = Input.GetTouch(0).position.y;
+            
+            //converting screenSpace to worldSpace
+            _worldSpacePosition = _camera.ScreenToWorldPoint(_screenSpacePosition);
+
+            _mouse.x = Input.GetTouch(0).deltaPosition.x;
+            _mouse.y = Input.GetTouch(0).deltaPosition.y;
         }
         else
         {
-            _mouseX = 0;
-            _mouseY = 0;
+            _mouse.x = 0;
+            _mouse.y = 0;
 
             // cube.position = new Vector3(Mathf.Lerp(cube.position.x, 0, (float) 1.5), cube.position.y, cube.position.z);
         }
@@ -110,7 +119,8 @@ public class PlayerMovement : MonoBehaviour
         // waits for the first input
         if (_canMove)
         {
-            Vector3 newPos = oldPos + new Vector3((xAxisSpeed * _mouseX * speedFactor) * Time.deltaTime, 0, zAxisSpeed * speedFactor * Time.deltaTime);
+            Vector3 newPos = oldPos + new Vector3((xAxisSpeed * _mouse.x * speedFactor) * Time.deltaTime, 0, zAxisSpeed * speedFactor * Time.deltaTime);
+            
 
             newPos.x = Mathf.Clamp(newPos.x, xAxisMovementClamp.x, xAxisMovementClamp.y);
             
@@ -118,5 +128,4 @@ public class PlayerMovement : MonoBehaviour
         }
     }
     
-
 }
