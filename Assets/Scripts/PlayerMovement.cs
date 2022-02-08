@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -57,42 +58,46 @@ public class PlayerMovement : MonoBehaviour
         if (!isTouchEnabled)
         {
             // _gettingInputs = true;
-            _gettingInputs = Input.GetKeyDown("space");
+            _gettingInputs = Keyboard.current.spaceKey.wasPressedThisFrame;
             if (_gettingInputs)
             {
                 _canMove = true;
             }
             
-            _mouse.x = Input.GetAxis("Horizontal");
-            _mouse.y = Input.GetAxis("Vertical");
+            // _mouse.x = Input.GetAxis("Horizontal");
+            // _mouse.y = Input.GetAxis("Vertical");
+            
+            // new InputSystem Text
+            _mouse = InputManager.Instance.Movement();
+            
             return;
         }
         
-        //gets the touch inputs of the X & Y axis
-        if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Moved)
-        {
-            _gettingInputs = true;
-            _canMove = _gettingInputs;
-            
-            // _mouseX = Mathf.Clamp(Input.GetTouch(0).deltaPosition.x, -1f, 1f);
-            // _mouseY = Mathf.Clamp(Input.GetTouch(0).deltaPosition.y, -1f, 1f);
-            
-            _screenSpacePosition.x = Input.GetTouch(0).position.x;
-            _screenSpacePosition.y = Input.GetTouch(0).position.y;
-            
-            //converting screenSpace to worldSpace
-            _worldSpacePosition = _camera.ScreenToWorldPoint(_screenSpacePosition);
-
-            _mouse.x = Input.GetTouch(0).deltaPosition.x;
-            _mouse.y = Input.GetTouch(0).deltaPosition.y;
-        }
-        else
-        {
-            _mouse.x = 0;
-            _mouse.y = 0;
-
-            // cube.position = new Vector3(Mathf.Lerp(cube.position.x, 0, (float) 1.5), cube.position.y, cube.position.z);
-        }
+        // //gets the touch inputs of the X & Y axis
+        // if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Moved)
+        // {
+        //     _gettingInputs = true;
+        //     _canMove = _gettingInputs;
+        //     
+        //     // _mouseX = Mathf.Clamp(Input.GetTouch(0).deltaPosition.x, -1f, 1f);
+        //     // _mouseY = Mathf.Clamp(Input.GetTouch(0).deltaPosition.y, -1f, 1f);
+        //     
+        //     _screenSpacePosition.x = Input.GetTouch(0).position.x;
+        //     _screenSpacePosition.y = Input.GetTouch(0).position.y;
+        //     
+        //     //converting screenSpace to worldSpace
+        //     _worldSpacePosition = _camera.ScreenToWorldPoint(_screenSpacePosition);
+        //
+        //     _mouse.x = Input.GetTouch(0).deltaPosition.x;
+        //     _mouse.y = Input.GetTouch(0).deltaPosition.y;
+        // }
+        // else
+        // {
+        //     _mouse.x = 0;
+        //     _mouse.y = 0;
+        //
+        //     // cube.position = new Vector3(Mathf.Lerp(cube.position.x, 0, (float) 1.5), cube.position.y, cube.position.z);
+        // }
         
     }
 
