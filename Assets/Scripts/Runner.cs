@@ -8,9 +8,10 @@ public class Runner : MonoBehaviour, IPooledObjects
     
     // [SerializeField] private PlayerMovement playerMovement;
     [SerializeField] private string obstacleTag;
-    [SerializeField] private GameObject deathParticle;
+    // [SerializeField] private GameObject deathParticleObject;
     [SerializeField] private bool isEnemy;
-    
+
+    private ParticleSystem _deathParticle;
     private bool _isMoving;
     private float _oldPositionZ;
     public bool IsMoving => _isMoving;
@@ -20,6 +21,7 @@ public class Runner : MonoBehaviour, IPooledObjects
     void Start()
     {
         _objectPooler = ObjectPooler.Instance;
+        _deathParticle = GetComponent<ParticleSystem>();
     }
     
     public void OnObjectSpawn()
@@ -33,12 +35,12 @@ public class Runner : MonoBehaviour, IPooledObjects
         //height Check
         if (transform.position.y < -3)
         {
-            DestroyRunner();
+            StartCoroutine(DestroyRunner());
         }
         CheckMovement();
     }
     
-
+    
     private void OnTriggerEnter(Collider other)
     {
         //detection for collision
@@ -57,15 +59,16 @@ public class Runner : MonoBehaviour, IPooledObjects
             GetComponent<Collider>().enabled = false;
             // GetComponentInChildren<Renderer>().enabled = false;
             
-            Instantiate(deathParticle, transform);
-            
-            Destroy(gameObject, 0.3f);
+            // Destroy(gameObject, 0.3f);
+            StartCoroutine(PlayDeath());
+            // gameObject.SetActive(false);
+            Destroy(gameObject);
             yield return null;
         }
 
-        Instantiate(deathParticle, transform);
+        StartCoroutine(PlayDeath());
             
-        Destroy(gameObject, 0.3f);
+        // Destroy(gameObject, 0.3f);
         yield return new WaitForSeconds(0.3f);
         _objectPooler.DestroyRunner("PlayerRunner", gameObject);
         
@@ -80,6 +83,17 @@ public class Runner : MonoBehaviour, IPooledObjects
 
         _oldPositionZ = posZ;
 
+    }
+    
+    private IEnumerator PlayDeath()
+    {
+        _deathParticle.Play();
+        Debug.Log("Spawned playing");
+
+        yield return new WaitForSeconds(0.01f);
+        
+        Debug.Log("Particles stopping");
+        _deathParticle.Stop();
     }
     
 }

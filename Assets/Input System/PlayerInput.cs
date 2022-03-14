@@ -44,6 +44,15 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MoveTouchX"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""72b376d2-cc16-4b9e-9b01-046ddfbc69b6"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -112,6 +121,17 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""action"": ""Space"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d8431625-cd12-4785-9ef1-5c1c1d8afa48"",
+                    ""path"": ""<Touchscreen>/primaryTouch/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MoveTouchX"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -122,6 +142,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Space = m_Player.FindAction("Space", throwIfNotFound: true);
+        m_Player_MoveTouchX = m_Player.FindAction("MoveTouchX", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -183,12 +204,14 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
     private IPlayerActions m_PlayerActionsCallbackInterface;
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_Space;
+    private readonly InputAction m_Player_MoveTouchX;
     public struct PlayerActions
     {
         private @PlayerInput m_Wrapper;
         public PlayerActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Player_Move;
         public InputAction @Space => m_Wrapper.m_Player_Space;
+        public InputAction @MoveTouchX => m_Wrapper.m_Player_MoveTouchX;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -204,6 +227,9 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @Space.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSpace;
                 @Space.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSpace;
                 @Space.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSpace;
+                @MoveTouchX.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMoveTouchX;
+                @MoveTouchX.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMoveTouchX;
+                @MoveTouchX.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMoveTouchX;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -214,6 +240,9 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @Space.started += instance.OnSpace;
                 @Space.performed += instance.OnSpace;
                 @Space.canceled += instance.OnSpace;
+                @MoveTouchX.started += instance.OnMoveTouchX;
+                @MoveTouchX.performed += instance.OnMoveTouchX;
+                @MoveTouchX.canceled += instance.OnMoveTouchX;
             }
         }
     }
@@ -222,5 +251,6 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
         void OnSpace(InputAction.CallbackContext context);
+        void OnMoveTouchX(InputAction.CallbackContext context);
     }
 }

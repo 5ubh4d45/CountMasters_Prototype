@@ -8,7 +8,7 @@ public class EnemyController : MonoBehaviour
 {
     [SerializeField] private Transform holder;
     [SerializeField] private TeamMaker teamMaker;
-    [SerializeField] private Runner runner;
+    // [SerializeField] private Runner runner;
 
     [Space] [SerializeField] private LayerMask runnerLayer;
     [SerializeField] private float detectionSphereRadius;
@@ -20,12 +20,7 @@ public class EnemyController : MonoBehaviour
     private bool _isDead;
     private bool _canMove;
     private PlayerMovement _playerMovement;
-    
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    private Collider[] _runnerColliders = new Collider[1];
 
     // Update is called once per frame
     void Update()
@@ -46,12 +41,15 @@ public class EnemyController : MonoBehaviour
     {
         if (_engaged) return;
 
-        Collider[] runnerColliders = Physics.OverlapSphere(transform.position, detectionSphereRadius, runnerLayer);
+        // Collider[] runnerColliders = Physics.OverlapSphere(transform.position, detectionSphereRadius, runnerLayer);
+        // if (_runnerColliders.Length <= 0) return;
         
-        if (runnerColliders.Length <= 0) return;
+        var size = Physics.OverlapSphereNonAlloc(transform.position, detectionSphereRadius, _runnerColliders, runnerLayer);
+        
+        if (_runnerColliders[0] == null) return;
         
         // getting the first collider in case of overlapping 
-        Collider runnerCollider = runnerColliders[0];
+        Collider runnerCollider = _runnerColliders[0];
 
         _engaged = true;
         
