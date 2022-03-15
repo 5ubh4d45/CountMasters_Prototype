@@ -1,19 +1,20 @@
+using System.Collections;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private Transform cube;
     
     [SerializeField] private float zAxisSpeed = 3f;
-    [SerializeField] private float xAxisSpeed = 0.1f;
+    [SerializeField] private float xAxisSpeed = 1f;
 
     [SerializeField] private Vector2 xAxisMovementClamp;
-
-    [SerializeField] private bool isTouchEnabled;
-    private Vector2 _mouse;
     
-    [HideInInspector]
+    private Vector2 _movement;
+    private Vector3 _newPos;
+    private Vector3 _oldPos;
+    
+    // [HideInInspector]
     public float speedFactor = 1f;
     
     private bool _gettingInputs;
@@ -26,13 +27,16 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 _actualClamping;
 
     private Detection _detection;
+
+    private InputManager _input;
     
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         _detection = GetComponent<Detection>();
         _canMove = false;
         _camera = Camera.main;
+        _input = InputManager.Instance;
     }
 
     // Update is called once per frame
@@ -50,51 +54,15 @@ public class PlayerMovement : MonoBehaviour
 
     private void ProcessInputs()
     {
-        //checks for the touch if disabled then it uses keyboard
-        if (!isTouchEnabled)
+        // new InputSystem
+        _movement = _input.Movement;
+        
+        // _gettingInputs = true;
+        _gettingInputs = _input.IsSpace || _movement.x != 0;
+        if (_gettingInputs)
         {
-            // _gettingInputs = true;
-            _gettingInputs = Keyboard.current.spaceKey.wasPressedThisFrame;
-            if (_gettingInputs)
-            {
-                _canMove = true;
-            }
-            
-            // _mouse.x = Input.GetAxis("Horizontal");
-            // _mouse.y = Input.GetAxis("Vertical");
-            
-            // new InputSystem Text
-            _mouse = InputManager.Instance.Movement();
-            
-            return;
+            _canMove = true;
         }
-        
-        // //gets the touch inputs of the X & Y axis
-        // if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Moved)
-        // {
-        //     _gettingInputs = true;
-        //     _canMove = _gettingInputs;
-        //     
-        //     // _mouseX = Mathf.Clamp(Input.GetTouch(0).deltaPosition.x, -1f, 1f);
-        //     // _mouseY = Mathf.Clamp(Input.GetTouch(0).deltaPosition.y, -1f, 1f);
-        //     
-        //     _screenSpacePosition.x = Input.GetTouch(0).position.x;
-        //     _screenSpacePosition.y = Input.GetTouch(0).position.y;
-        //     
-        //     //converting screenSpace to worldSpace
-        //     _worldSpacePosition = _camera.ScreenToWorldPoint(_screenSpacePosition);
-        //
-        //     _mouse.x = Input.GetTouch(0).deltaPosition.x;
-        //     _mouse.y = Input.GetTouch(0).deltaPosition.y;
-        // }
-        // else
-        // {
-        //     _mouse.x = 0;
-        //     _mouse.y = 0;
-        //
-        //     // cube.position = new Vector3(Mathf.Lerp(cube.position.x, 0, (float) 1.5), cube.position.y, cube.position.z);
-        // }
-        
     }
 
     private void CheckClampSize()
@@ -107,7 +75,7 @@ public class PlayerMovement : MonoBehaviour
     private void Movement()
     {   
         //moves the cube
-        Vector3 oldPos = cube.position;
+        _oldPos = cube.position;
 
         CheckClampSize();
         
@@ -120,13 +88,27 @@ public class PlayerMovement : MonoBehaviour
         // waits for the first input
         if (_canMove)
         {
-            Vector3 newPos = oldPos + new Vector3((xAxisSpeed * _mouse.x * speedFactor) * Time.deltaTime, 0, zAxisSpeed * speedFactor * Time.deltaTime);
+            _newPos = _oldPos + new Vector3((xAxisSpeed * _movement.x * speedFactor) * Time.deltaTime, 0, zAxisSpeed * speedFactor * Time.deltaTime);
             
 
-            newPos.x = Mathf.Clamp(newPos.x, xAxisMovementClamp.x, xAxisMovementClamp.y);
+            _newPos.x = Mathf.Clamp(_newPos.x, xAxisMovementClamp.x, xAxisMovementClamp.y);
             
-            cube.position = newPos;
+            cube.position = _newPos;
         }
     }
-    
+
+    public IEnumerator RunTowardsMiddle(float duration)
+    {
+        float tempPosX;
+        float timeElapsed = 0f;
+        while (timeElapsed < duration)
+        {
+            tempPosX = Mathf.Lerp(a: _newPos.x, b: 0, t: timeElapsed/duration);
+            transform.position = new Vector3(tempPosX, _newPos.y, _newPos.z);
+            timeElapsed += Time.deltaTime;
+
+            yield return null;
+        }
+    }
+
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -41,15 +42,15 @@ public class TeamMaker : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (checkFormationRealTime)
-        {
-            RunnerArranger();
-        }
-
         currentRunnerAmount = transform.childCount;
         CheckDeathSts();
     }
-    
+
+    private void FixedUpdate()
+    {
+        RunnerArranger();
+    }
+
     private void RunnerArranger()
     {
         // float goldenAngle = 137.5f * angleFactor;

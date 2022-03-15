@@ -1,8 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
 
 public class EnemyController : MonoBehaviour
 {
@@ -14,7 +10,7 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private float detectionSphereRadius;
 
     [SerializeField] private float enemySpeed;
-    [SerializeField] private float slowDownFactor = 0.1f;
+    [SerializeField] private float slowDownFactor = 0.3f;
 
     private bool _engaged;
     private bool _isDead;
@@ -33,20 +29,18 @@ public class EnemyController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        
         MoveTowardsPlayer();
     }
 
     private void DetectRunner()
     {
-        if (_engaged) return;
-
         // Collider[] runnerColliders = Physics.OverlapSphere(transform.position, detectionSphereRadius, runnerLayer);
         // if (_runnerColliders.Length <= 0) return;
         
-        var size = Physics.OverlapSphereNonAlloc(transform.position, detectionSphereRadius, _runnerColliders, runnerLayer);
+        Physics.OverlapSphereNonAlloc(transform.position, detectionSphereRadius, _runnerColliders, runnerLayer);
         
         if (_runnerColliders[0] == null) return;
+        if (_engaged) return;
         
         // getting the first collider in case of overlapping 
         Collider runnerCollider = _runnerColliders[0];
@@ -54,6 +48,8 @@ public class EnemyController : MonoBehaviour
         _engaged = true;
         
         _playerMovement = runnerCollider.transform.parent.parent.GetComponent<PlayerMovement>();
+        
+        StartCoroutine(_playerMovement.RunTowardsMiddle(2f));
         
         _playerMovement.speedFactor = slowDownFactor;
 
@@ -65,9 +61,9 @@ public class EnemyController : MonoBehaviour
 
     private void CheckDeath()
     {
-        if (_playerMovement == null || _isDead)return;
+        if (_isDead || !_engaged)return;
         
-        if (teamMaker.CurrentRunnerAmount - 2 <= 0)
+        if (_runnerColliders[0] == null || teamMaker.CurrentRunnerAmount - 2 <= 0)
         {
             _isDead = true;
             _canMove = false;
@@ -80,7 +76,7 @@ public class EnemyController : MonoBehaviour
 
     private void MoveTowardsPlayer()
     {
-        if(_isDead) return;     //checks if enemies are dead
+        if(_playerMovement == null || _isDead) return;     //checks if enemies are dead
 
         if (_canMove)
         {

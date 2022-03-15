@@ -88,11 +88,11 @@ public class Runner : MonoBehaviour, IPooledObjects
     private IEnumerator PlayDeath()
     {
         _deathParticle.Play();
-        Debug.Log("Spawned playing");
+        // Debug.Log("Spawned playing");
 
         yield return new WaitForSeconds(0.01f);
         
-        Debug.Log("Particles stopping");
+        // Debug.Log("Particles stopping");
         _deathParticle.Stop();
     }
     

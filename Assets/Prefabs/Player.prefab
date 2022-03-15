@@ -52,7 +52,7 @@ MonoBehaviour:
   baseAngle: 135
   checkFormationRealTime: 0
   runner: {fileID: 2114906217854467481, guid: 23961d85d7d99db4e9b5a68a18e12eb3, type: 3}
-  objectToSpawn: 
+  objectToSpawn: PlayerRunner
   currentRunnerAmount: 1
 --- !u!1 &8175476553712408682
 GameObject:
@@ -103,9 +103,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cube: {fileID: 8175476553712408683}
   zAxisSpeed: 5
-  xAxisSpeed: 0.2
+  xAxisSpeed: 3
   xAxisMovementClamp: {x: -4, y: 4}
-  isTouchEnabled: 1
   speedFactor: 1
 --- !u!114 &8175476553712408680
 MonoBehaviour:

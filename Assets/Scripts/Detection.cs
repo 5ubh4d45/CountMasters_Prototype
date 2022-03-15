@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Detection : MonoBehaviour
@@ -13,11 +10,6 @@ public class Detection : MonoBehaviour
 
     public float DetectionSpehereRadius => detectionSphereRadius;
     
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     // Update is called once per frame
     void Update()
@@ -48,7 +40,7 @@ public class Detection : MonoBehaviour
         
         //temp gate check
         // detectedGate.gameObject.SetActive(false);
-        Debug.Log("Gates detected spawning!!");
+        // Debug.Log("Gates detected spawning!!");
 
     }
 

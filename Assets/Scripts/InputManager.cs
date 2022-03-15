@@ -12,6 +12,11 @@ public class InputManager : MonoBehaviour
     public static InputManager Instance;
 
     private Vector2 _movementVector;
+    public Vector2 Movement => _movementVector;
+
+    private bool _isSpace;
+    public bool IsSpace => _isSpace;
+    
     private Vector3 _touchVector;
 
     private InputAction.CallbackContext _ctx;
@@ -29,33 +34,34 @@ public class InputManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        _playerInput = new PlayerInput();
     }
 
     private void OnEnable()
     {
-        _playerInput = new PlayerInput();
         _playerInput.Player.Enable();
 
-        _playerInput.Player.Move.performed += ctx => _movementVector = ctx.ReadValue<Vector2>();
-        _playerInput.Player.Move.canceled += ctx => _movementVector = Vector2.zero;
+        // _playerInput.Player.Move.performed += ctx => _movementVector = ctx.ReadValue<Vector2>();
+        // _playerInput.Player.Move.canceled += ctx => _movementVector = Vector2.zero;
         // _playerInput.Player.MoveTouchX.performed += GetTouch;
-
     }
 
-    // Start is called before the first frame update
-    void Start()
+    private void OnDisable()
     {
-        
+        _playerInput.Player.Disable();
     }
 
     // Update is called once per frame
     void Update()
     {
+        _movementVector = _playerInput.Player.Move.ReadValue<Vector2>();
+        _isSpace = _playerInput.Player.Space.WasReleasedThisFrame();
+        
         Vector3 screenPos = _playerInput.Player.MoveTouchX.ReadValue<Vector2>();
         screenPos.z = _camera.nearClipPlane;
         
         _touchVector = _camera.ScreenToWorldPoint(screenPos);
-       // Debug.Log(_touchVector);
+        // Debug.Log(_movementVector);
     }
 
     public void GetTouch(InputAction.CallbackContext ctx)
@@ -65,9 +71,6 @@ public class InputManager : MonoBehaviour
         
         _touchVector = _camera.ScreenToWorldPoint(screenPos);
     }
-    public Vector2 Movement()
-    {
-        return _movementVector;
-    }
+    
 
 }

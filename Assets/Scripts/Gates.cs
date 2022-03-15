@@ -15,18 +15,12 @@ public class Gates : MonoBehaviour
     [SerializeField] private Collider[] gateCol;
 
     private Multiplier _currentMultiplier;
-    public enum MultiplierType { add, multiply }
+    public enum MultiplierType { Add, Multiply }
     
     // Start is called before the first frame update
     void Start()
     {
         SetGateText();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     private void SetGateText()
@@ -45,7 +39,7 @@ public class Gates : MonoBehaviour
             _currentMultiplier = rightMultiplier;
             
             //disable the gate
-            Debug.Log("rightGate");
+            // Debug.Log("rightGate");
             gateCol[1].gameObject.SetActive(false);
             
             return CalculateMultiplier(currentRunnerAmount);
@@ -54,7 +48,7 @@ public class Gates : MonoBehaviour
         _currentMultiplier = leftMultiplier;
         
         //disable the gate
-        Debug.Log("leftGate");
+        // Debug.Log("leftGate");
         gateCol[0].gameObject.SetActive(false);
         
         return CalculateMultiplier(currentRunnerAmount);
@@ -65,10 +59,10 @@ public class Gates : MonoBehaviour
         //calculates the values to add
         switch (_currentMultiplier.GetMultiplierType())
         {
-            case MultiplierType.add:
+            case MultiplierType.Add:
                 return _currentMultiplier.GetMultiplierValue();
             
-            case MultiplierType.multiply:
+            case MultiplierType.Multiply:
                 return ((currentRunnerAmount * _currentMultiplier.GetMultiplierValue()) - currentRunnerAmount);
             
             default:
@@ -78,9 +72,9 @@ public class Gates : MonoBehaviour
 
     private void DisableGates()
     {
-        foreach (Collider collider in gateCol)
+        foreach (Collider collider1 in gateCol)
         {
-            collider.enabled = false;
+            collider1.enabled = false;
         }
     }
     
@@ -109,7 +103,7 @@ public class Gates : MonoBehaviour
 
         public string GetMultiplierText()
         {
-            if (multiplierType == MultiplierType.add)
+            if (multiplierType == MultiplierType.Add)
             {
                 return "+" + multiplierValue;
             }

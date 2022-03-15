@@ -50,11 +50,11 @@ public class Obstacles : MonoBehaviour
 
         if (maxRotation <= 60f)
         {
-            colTransform.rotation = Quaternion.Euler(0, 0, Mathf.Lerp(minRotation, maxRotation, rotationSpeed));
+            colTransform.rotation = Quaternion.Euler(0, 0, Mathf.Lerp(a: minRotation, b: maxRotation, t: rotationSpeed));
         }
         else
         {
-            colTransform.rotation = Quaternion.Euler(0, 0, Mathf.Lerp(maxRotation, minRotation, rotationSpeed));
+            colTransform.rotation = Quaternion.Euler(0, 0, Mathf.Lerp(a: maxRotation, b: minRotation, t: rotationSpeed));
         }
         
     }
